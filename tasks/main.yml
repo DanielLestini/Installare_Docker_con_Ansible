@@ -1,0 +1,41 @@
+- name :  Fai apt-get update
+  apt:
+    update_cache: yes
+- name:    Installa i prerequisiti
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg-agent
+      - software-properties-common
+#- name: Add Docker GPG key
+#  apt_key:
+#    url: https://download.docker.com/linux/ubuntu/gpg
+#    state: present
+- name: Eseguire tramite shell l'aggiunta della chiave GPG di Docker
+  shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+                           #- name: Eseguire tramite shell il comando sudo apt-key add -
+                           #  shell: apt-key add - 
+#    Add Docker APT repository
+#- apt_repository:
+#    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ansible_distribution_version}} stable
+#    state: present
+- name: Eseguire tramite shell l'inserimento nel repository
+  shell: add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+- name :  Fai apt-get update
+  apt:
+    update_cache: yes
+    #- name: Eseguire tramite shell l'installazione
+    #  shell: apt-get install docker-ce docker-ce-cli containerd.io
+- name:    Installa Docker
+  package:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+
